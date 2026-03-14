@@ -230,6 +230,7 @@ async def serve_spa(full_path: str):
 
 if __name__ == "__main__":
     import uvicorn
-    # Read port from environment variable, default to 8000
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run("main:app", host="0.0.0.0", port=port)
+    # Native Python port handling for Railway/Cloud
+    port = int(os.environ.get("PORT", 8000))
+    print(f"--- SleepEase Monolith starting on port {port} ---")
+    uvicorn.run(app, host="0.0.0.0", port=port)
