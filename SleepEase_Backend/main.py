@@ -212,3 +212,18 @@ def export_data_for_analytics(admin_secret: str = Header(None)):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+# --- 9. Serve Frontend (SPA) ---
+static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    file_path = os.path.join(static_dir, full_path)
+    if os.path.isfile(file_path):
+        return FileResponse(file_path)
+    
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.isfile(index_path):
+        return FileResponse(index_path)
+    
+    return {"status": "error", "message": "Frontend build not found."}
