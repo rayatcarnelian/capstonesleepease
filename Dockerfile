@@ -24,4 +24,4 @@ COPY --from=frontend-builder /app/frontend/dist ./static
 EXPOSE 8000
 
 # Start the application
-CMD python main.py
+CMD ["python", "main.py"]
