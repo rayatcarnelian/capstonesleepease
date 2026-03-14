@@ -14,8 +14,8 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source code (now in root)
-COPY . ./
+# Copy everything
+COPY . .
 
 # Copy the frontend build from Stage 1 into the backend's static folder
 COPY --from=frontend-builder /app/frontend/dist ./static
@@ -24,4 +24,4 @@ COPY --from=frontend-builder /app/frontend/dist ./static
 EXPOSE 8000
 
 # Start the application
-CMD ["python", "main.py"]
+CMD python main.py
