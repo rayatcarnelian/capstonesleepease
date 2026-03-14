@@ -15,17 +15,10 @@ from ai_engine import get_mood_advice
 app = FastAPI(title="SleepEase Backend")
 
 # --- 1. CORS Configuration ---
-# This allows your Vite frontend (localhost:5173/5174) to talk to this API
-origins = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-]
-
+# Allow all origins for easier frontend integration during development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

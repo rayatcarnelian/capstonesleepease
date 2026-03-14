@@ -1,27 +1,13 @@
 import { useState } from 'react';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff } from 'lucide-react';
-import PhoneFrame from './PhoneFrame';
 import { Language, translations } from '../translations';
 import { signIn, signInWithGoogle } from '../../services/auth';
 
 type Screen =
-  | 'mode-selection'
-  | 'general-home'
-  | 'islamic-home'
-  | 'general-login'
-  | 'islamic-login'
-  | 'general-signup'
-  | 'islamic-signup'
-  | 'mood-check-general'
-  | 'mood-check-islamic'
-  | 'content-general'
-  | 'content-islamic'
-  | 'ai-chat'
-  | 'ai-chat-islamic'
-  | 'mood-history-general'
-  | 'mood-history-islamic'
-  | 'settings'
-  | 'settings-islamic';
+  | 'mode-selection' | 'general-home' | 'islamic-home' | 'general-login' | 'islamic-login'
+  | 'general-signup' | 'islamic-signup' | 'mood-check-general' | 'mood-check-islamic'
+  | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic'
+  | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'settings-islamic';
 
 type Mode = 'general' | 'islamic' | null;
 
@@ -67,143 +53,90 @@ export default function IslamicLoginScreen({ navigate, currentLanguage }: Islami
   };
 
   return (
-    <PhoneFrame>
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-emerald-950 via-slate-950 to-emerald-900" />
-
-      {/* Decorative elements */}
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden" style={{ fontFamily: "'Inter', sans-serif" }}>
+      {/* Full-screen background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-emerald-950 via-slate-950 to-emerald-900" />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-32 h-32 bg-emerald-400/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-40 left-10 w-40 h-40 bg-yellow-400/10 rounded-full blur-3xl" />
+        <div className="absolute top-20 right-1/4 w-60 h-60 bg-emerald-400/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-32 left-1/4 w-72 h-72 bg-yellow-400/10 rounded-full blur-3xl" />
       </div>
 
-      {/* Scrollable Content Container */}
-      <div className="relative w-full h-full overflow-y-auto overflow-x-hidden">
-        <div className="min-h-full flex flex-col px-6 pt-14 pb-8">
-          {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <button
-              className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center transition-all hover:bg-white/15 active:scale-95"
-              onClick={() => navigate('mode-selection')}
-            >
-              <ArrowLeft className="w-5 h-5 text-white/80" />
-            </button>
+      {/* Quranic calligraphy watermark */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04]">
+        <p className="text-white text-[120px] sm:text-[200px]" style={{ fontFamily: "'Amiri', serif" }}>بِسْمِ اللَّهِ</p>
+      </div>
 
-            <div className="flex-1">
-              <h1 className="text-white text-xl font-medium">مرحبا بعودتك</h1>
-              <p className="text-emerald-100/70 text-xs">Welcome Back</p>
-            </div>
-          </div>
+      {/* Card */}
+      <div className="relative w-full max-w-md mx-4 sm:mx-auto">
+        <div className="rounded-3xl bg-white/5 backdrop-blur-xl border border-emerald-400/10 p-8 sm:p-10 shadow-2xl">
+          <button
+            className="mb-6 w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center transition-all hover:bg-white/15 active:scale-95"
+            onClick={() => navigate('mode-selection')}
+          >
+            <ArrowLeft className="w-5 h-5 text-white/80" />
+          </button>
 
           {/* Logo */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-yellow-300/30 backdrop-blur-xl flex items-center justify-center mb-4">
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <path
-                  d="M35 24c-2 1.2-4.3 1.8-6.8 1.8-7.3 0-13.2-6-13.2-13.2 0-2.5.7-4.8 1.8-6.8A15 15 0 1 0 35 24Z"
-                  stroke="#F5D36C"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M24 30.3s-4.2-2.5-6-4.8c-1.8-2.3-1.2-5.3 1-6.8 1.7-1.2 3.8-.8 5 .7 1.2-1.5 3.3-1.5 5-.3 2 1.3 2.5 4.3.7 6.7-1.8 2.5-5.7 4.7-5.7 4.7Z"
-                  fill="#F5D36C"
-                  opacity="0.9"
-                />
+                <path d="M35 24c-2 1.2-4.3 1.8-6.8 1.8-7.3 0-13.2-6-13.2-13.2 0-2.5.7-4.8 1.8-6.8A15 15 0 1 0 35 24Z" stroke="#F5D36C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M24 30.3s-4.2-2.5-6-4.8c-1.8-2.3-1.2-5.3 1-6.8 1.7-1.2 3.8-.8 5 .7 1.2-1.5 3.3-1.5 5-.3 2 1.3 2.5 4.3.7 6.7-1.8 2.5-5.7 4.7-5.7 4.7Z" fill="#F5D36C" opacity="0.9" />
               </svg>
             </div>
             <h2 className="text-white text-2xl font-light mb-1">SleepEase</h2>
             <p className="text-emerald-100/60 text-sm">Islamic Mode</p>
           </div>
 
-          {/* Greeting */}
           <div className="text-center mb-6">
-            <p className="text-emerald-100/80 text-sm mb-1">As-salamu alaykum</p>
-            <p className="text-emerald-100/60 text-xs">Peace be upon you</p>
+            <p className="text-emerald-100/80 text-sm mb-1" style={{ fontFamily: "'Amiri', serif" }}>مرحبا بعودتك</p>
+            <p className="text-emerald-100/60 text-xs">As-salamu alaykum · Peace be upon you</p>
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="flex-1 flex flex-col">
-            <div className="space-y-4 mb-6">
-              {/* Email Input */}
-              <div>
-                <label className="text-emerald-100/80 text-xs mb-2 block">{t.emailLabel}</label>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-100/40" />
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your@email.com"
-                    className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white placeholder:text-emerald-100/30 focus:outline-none focus:border-emerald-400/50 focus:bg-white/15 transition-all"
-                    required
-                  />
-                </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-emerald-100/80 text-xs mb-2 block">{t.emailLabel}</label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-100/40" />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="your@email.com"
+                  className="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white placeholder:text-emerald-100/30 focus:outline-none focus:border-emerald-400/50 focus:bg-white/15 transition-all text-sm" required />
               </div>
+            </div>
 
-              {/* Password Input */}
-              <div>
-                <label className="text-emerald-100/80 text-xs mb-2 block">{t.passwordLabel}</label>
-                <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-100/40" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
-                    className="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white placeholder:text-emerald-100/30 focus:outline-none focus:border-emerald-400/50 focus:bg-white/15 transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-100/40 hover:text-emerald-100/60 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Forgot Password */}
-              <div className="flex justify-end">
-                <button type="button" className="text-emerald-300 text-xs hover:text-emerald-200 transition-colors">
-                  {t.forgotPassword}
+            <div>
+              <label className="text-emerald-100/80 text-xs mb-2 block">{t.passwordLabel}</label>
+              <div className="relative">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-emerald-100/40" />
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password"
+                  className="w-full pl-12 pr-12 py-3.5 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white placeholder:text-emerald-100/30 focus:outline-none focus:border-emerald-400/50 focus:bg-white/15 transition-all text-sm" required />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-100/40 hover:text-emerald-100/60">
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
 
-            {/* Error Message */}
+            <div className="flex justify-end">
+              <button type="button" className="text-emerald-300 text-xs hover:text-emerald-200">{t.forgotPassword}</button>
+            </div>
+
             {error && (
-              <div className="mb-3 p-3 rounded-2xl bg-red-500/20 border border-red-400/30">
+              <div className="p-3 rounded-2xl bg-red-500/20 border border-red-400/30">
                 <p className="text-red-300 text-xs text-center">{error}</p>
               </div>
             )}
 
-            {/* Sign In Button */}
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-sm font-medium transition-all hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+            <button type="submit" disabled={isSubmitting}
+              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-sm font-medium transition-all hover:shadow-lg hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50">
               {isSubmitting ? '...' : t.signInButton}
             </button>
 
-            {/* Divider */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="flex-1 h-px bg-white/20" />
-              <span className="text-emerald-100/50 text-xs">or</span>
-              <div className="flex-1 h-px bg-white/20" />
+            <div className="flex items-center gap-3">
+              <div className="flex-1 h-px bg-white/20" /><span className="text-emerald-100/50 text-xs">or</span><div className="flex-1 h-px bg-white/20" />
             </div>
 
-            {/* Social Login Buttons */}
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={isSubmitting}
-                className="py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white text-sm hover:bg-white/15 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-              >
+            <div className="grid grid-cols-2 gap-3">
+              <button type="button" onClick={handleGoogleSignIn} disabled={isSubmitting}
+                className="py-3 rounded-2xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-all flex items-center justify-center gap-2 disabled:opacity-50">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
                   <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -212,10 +145,7 @@ export default function IslamicLoginScreen({ navigate, currentLanguage }: Islami
                 </svg>
                 <span className="text-xs">Google</span>
               </button>
-              <button
-                type="button"
-                className="py-3 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white text-sm hover:bg-white/15 transition-all flex items-center justify-center gap-2"
-              >
+              <button type="button" className="py-3 rounded-2xl bg-white/10 border border-white/20 text-white text-sm hover:bg-white/15 transition-all flex items-center justify-center gap-2">
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
                 </svg>
@@ -223,32 +153,20 @@ export default function IslamicLoginScreen({ navigate, currentLanguage }: Islami
               </button>
             </div>
 
-            {/* Sign Up Link */}
-            <div className="text-center mt-auto">
+            <div className="text-center pt-2">
               <p className="text-emerald-100/60 text-xs">
                 {t.noAccount}{' '}
-                <button
-                  type="button"
-                  onClick={() => navigate('islamic-signup')}
-                  className="text-emerald-300 hover:text-emerald-200 transition-colors"
-                >
-                  {t.signUpLink}
-                </button>
+                <button type="button" onClick={() => navigate('islamic-signup')} className="text-emerald-300 hover:text-emerald-200">{t.signUpLink}</button>
               </p>
             </div>
           </form>
 
-          {/* Islamic Blessing */}
-          <div className="text-center mt-4">
-            <p className="text-emerald-100/50 text-xs italic">
-              بارك الله فيك
-            </p>
-            <p className="text-emerald-100/40 text-[10px]">
-              May Allah bless you
-            </p>
+          <div className="text-center mt-6">
+            <p className="text-emerald-100/50 text-xs italic" style={{ fontFamily: "'Amiri', serif" }}>بارك الله فيك</p>
+            <p className="text-emerald-100/40 text-[10px]">May Allah bless you</p>
           </div>
         </div>
       </div>
-    </PhoneFrame>
+    </div>
   );
 }
