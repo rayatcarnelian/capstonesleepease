@@ -14,9 +14,4 @@ services:
       - key: FIREBASE_CREDENTIALS
         sync: false # You will need to paste the entire serviceAccountKey.json contents here
 
-  # Frontend Static Site
-  - type: static_site
-    name: sleepease-frontend
-    rootDir: sleepeace-new-main
-    buildCommand: "npm install && npm run build"
-    publishPath: "dist"
+
