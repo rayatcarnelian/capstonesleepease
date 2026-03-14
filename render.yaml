@@ -11,6 +11,8 @@ services:
         value: 3.10.0
       - key: GROQ_API_KEY
         sync: false # You will need to add this manually in the Render dashboard
+      - key: FIREBASE_CREDENTIALS
+        sync: false # You will need to paste the entire serviceAccountKey.json contents here
 
   # Frontend Static Site
   - type: static_site
