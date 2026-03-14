@@ -227,3 +227,9 @@ async def serve_spa(full_path: str):
         return FileResponse(index_path)
     
     return {"status": "error", "message": "Frontend build not found."}
+
+if __name__ == "__main__":
+    import uvicorn
+    # Read port from environment variable, default to 8000
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
