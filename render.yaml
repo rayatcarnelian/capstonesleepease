@@ -13,8 +13,7 @@ services:
         sync: false # You will need to add this manually in the Render dashboard
 
   # Frontend Static Site
-  - type: web # Using web service instead of static site so we can do URL rewriting easily if needed, but static site is better
-    type: static_site
+  - type: static_site
     name: sleepease-frontend
     env: static
     rootDir: sleepeace-new-main
