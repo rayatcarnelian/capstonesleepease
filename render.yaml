@@ -1,0 +1,28 @@
+services:
+  # Backend API Service
+  - type: web
+    name: sleepease-backend
+    env: python
+    rootDir: SleepEase_Backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: GROQ_API_KEY
+        sync: false # You will need to add this manually in the Render dashboard
+
+  # Frontend Static Site
+  - type: web # Using web service instead of static site so we can do URL rewriting easily if needed, but static site is better
+    type: static_site
+    name: sleepease-frontend
+    env: static
+    rootDir: sleepeace-new-main
+    buildCommand: "npm install && npm run build"
+    publishPath: "dist"
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: sleepease-backend
+          envVarKey: RENDER_EXTERNAL_URL
