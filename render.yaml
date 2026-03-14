@@ -15,7 +15,7 @@ services:
         sync: false # You will need to paste the entire serviceAccountKey.json contents here
 
   # Frontend Static Site
-  - type: static_site
+  - type: web
     name: sleepease-frontend
     env: static
     rootDir: sleepeace-new-main
