@@ -50,24 +50,21 @@ const AIChatSupportScreen = ({ navigate, currentLanguage, userName }: AIChatSupp
       };
 
       const payload = {
-        model: "llama-3.3-70b-versatile",
-        messages: [systemPrompt, ...chatHistory],
-        temperature: 0.7,
-        max_tokens: 1024
+        message: currentInput,
+        mode: "general"
       };
 
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch("/chat", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
       const data = await res.json();
-      const reply = data.choices[0]?.message?.content || "Take a deep breath. I'm here for you.";
+      const reply = data.reply || "Take a deep breath. I'm here for you.";
       
       setMessages(prev => [...prev, { id: Date.now() + 1, text: reply, sender: 'bot' }]);
     } catch (error) {

@@ -11,16 +11,16 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Install backend dependencies
-COPY SleepEase_Backend/requirements.txt ./
+COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend source code
-COPY SleepEase_Backend/ ./
+# Copy backend source code (now in root)
+COPY . ./
 
 # Copy the frontend build from Stage 1 into the backend's static folder
 COPY --from=frontend-builder /app/frontend/dist ./static
 
-# Expose the port (FastAPI default)
+# Expose the port
 EXPOSE 8000
 
 # Start the application

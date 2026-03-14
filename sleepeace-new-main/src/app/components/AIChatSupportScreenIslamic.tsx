@@ -53,24 +53,21 @@ export default function AIChatSupportScreenIslamic({ navigate, currentLanguage =
       };
 
       const payload = {
-        model: "llama-3.3-70b-versatile",
-        messages: [systemPrompt, ...chatHistory],
-        temperature: 0.7,
-        max_tokens: 1024
+        message: message,
+        mode: "islamic"
       };
 
-      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      const res = await fetch("/chat", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
       });
 
       if (!res.ok) throw new Error(`API Error: ${res.status}`);
       const data = await res.json();
-      const reply = data.choices[0]?.message?.content || "May Allah ease your mind.";
+      const reply = data.reply || "May Allah ease your mind.";
       
       setMessages((prev: Message[]) => [...prev, { id: Date.now(), text: reply, sender: 'bot', timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }]);
     } catch (error) {
