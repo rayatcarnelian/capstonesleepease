@@ -15,15 +15,8 @@ services:
         sync: false # You will need to paste the entire serviceAccountKey.json contents here
 
   # Frontend Static Site
-  - type: web
+  - type: static_site
     name: sleepease-frontend
-    env: static
     rootDir: sleepeace-new-main
     buildCommand: "npm install && npm run build"
     publishPath: "dist"
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: sleepease-backend
-          envVarKey: RENDER_EXTERNAL_URL
