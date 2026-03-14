@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import Header from './Header';
+import ParticlesBackground from './ParticlesBackground';
 import { Language } from '../translations';
 
 type Screen =
@@ -20,7 +21,10 @@ type Screen =
   | 'mood-history-islamic'
   | 'settings'
   | 'settings-islamic'
-  | 'language-selection';
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 type Mode = 'general' | 'islamic' | null;
 
@@ -59,28 +63,8 @@ export default function WebAppLayout({
         }`}
       />
 
-      {/* Decorative background elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div
-          className={`absolute top-20 right-1/4 w-96 h-96 rounded-full blur-3xl transition-colors duration-500 ${
-            isIslamic ? 'bg-emerald-400/5' : 'bg-blue-400/5'
-          }`}
-        />
-        <div
-          className={`absolute bottom-32 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl transition-colors duration-500 ${
-            isIslamic ? 'bg-yellow-400/5' : 'bg-purple-400/5'
-          }`}
-        />
-        {/* Subtle dot pattern */}
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.9) 1px, transparent 0)',
-            backgroundSize: '40px 40px',
-          }}
-        />
-      </div>
+      {/* Animated particles background */}
+      <ParticlesBackground mode={currentMode} />
 
       {/* Header */}
       <div className="relative z-50">

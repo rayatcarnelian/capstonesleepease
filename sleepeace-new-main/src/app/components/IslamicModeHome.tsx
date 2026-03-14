@@ -15,11 +15,16 @@ import {
   Wind
 } from "lucide-react";
 import { Language, translations } from "../translations";
+import PrayerTimesTracker from "./PrayerTimesTracker";
 
 type Screen =
   | 'mode-selection'
   | 'general-home'
   | 'islamic-home'
+  | 'general-login'
+  | 'islamic-login'
+  | 'general-signup'
+  | 'islamic-signup'
   | 'mood-check-general'
   | 'mood-check-islamic'
   | 'content-general'
@@ -28,7 +33,12 @@ type Screen =
   | 'ai-chat-islamic'
   | 'mood-history-general'
   | 'mood-history-islamic'
-  | 'settings-islamic';
+  | 'settings'
+  | 'settings-islamic'
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 type Mode = 'general' | 'islamic' | null;
 
@@ -134,29 +144,28 @@ export default function IslamicModeHome({ navigate, userInfo, currentLanguage }:
           </div>
 
           {/* Next Prayer */}
-          <div>
-            <h3 className="text-white text-base font-medium mb-3">{t.nextPrayer}</h3>
-            <div className="rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-400/20 backdrop-blur-xl p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-white/15 flex items-center justify-center">
-                  <span className="text-2xl">🕌</span>
-                </div>
-                <div>
-                  <p className="text-white text-sm font-medium">{t.fajrPrayer}</p>
-                  <p className="text-emerald-100/60 text-xs">{t.tomorrowMorning}</p>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-white text-lg font-semibold">5:42 AM</p>
-                <p className="text-emerald-300/80 text-xs flex items-center justify-end gap-1">
-                  <Clock className="w-3 h-3" />
-                  {t.inTime}
-                </p>
-              </div>
-            </div>
-          </div>
+          <PrayerTimesTracker translations={t} />
         </div>
       </div>
+
+      {/* AI Tutor Banner */}
+      <button 
+        onClick={() => navigate('islamic-tutor')}
+        className="w-full mb-8 rounded-3xl bg-gradient-to-r from-amber-600/40 to-yellow-600/20 border border-amber-400/30 backdrop-blur-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between text-left transition-all hover:scale-[1.01] active:scale-95 shadow-lg shadow-amber-900/10"
+      >
+        <div className="flex-1 pr-0 sm:pr-8 mb-4 sm:mb-0">
+          <div className="flex items-center gap-3 mb-2">
+             <div className="w-10 h-10 rounded-xl bg-amber-400/20 flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-amber-200" />
+             </div>
+             <h3 className="text-white text-xl font-medium">Islamic Knowledge Tutor</h3>
+          </div>
+          <p className="text-amber-100/70 text-sm">Ask questions and learn from the authentic sources of the Quran and Sahih Hadiths. Your personal AI companion.</p>
+        </div>
+        <div className="w-full sm:w-auto px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-amber-950 font-medium text-sm text-center transition-colors">
+          Ask a Question
+        </div>
+      </button>
 
       {/* Quick Action Cards */}
       <div className="mb-8">

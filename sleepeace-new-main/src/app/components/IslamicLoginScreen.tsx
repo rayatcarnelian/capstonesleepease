@@ -4,10 +4,27 @@ import { Language, translations } from '../translations';
 import { signIn, signInWithGoogle } from '../../services/auth';
 
 type Screen =
-  | 'mode-selection' | 'general-home' | 'islamic-home' | 'general-login' | 'islamic-login'
-  | 'general-signup' | 'islamic-signup' | 'mood-check-general' | 'mood-check-islamic'
-  | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic'
-  | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'settings-islamic';
+  | 'mode-selection'
+  | 'general-home'
+  | 'islamic-home'
+  | 'general-login'
+  | 'islamic-login'
+  | 'general-signup'
+  | 'islamic-signup'
+  | 'mood-check-general'
+  | 'mood-check-islamic'
+  | 'content-general'
+  | 'content-islamic'
+  | 'ai-chat'
+  | 'ai-chat-islamic'
+  | 'mood-history-general'
+  | 'mood-history-islamic'
+  | 'settings'
+  | 'settings-islamic'
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 type Mode = 'general' | 'islamic' | null;
 

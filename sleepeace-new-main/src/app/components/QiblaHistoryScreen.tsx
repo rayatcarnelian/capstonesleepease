@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { ChevronRight, Calendar, Award, Target, TrendingUp, Moon, Heart, Sun, BookOpen, Clock, Flame } from 'lucide-react';
+import { ChevronRight, Calendar, Award, Target, TrendingUp, Moon, Heart, Sun, BookOpen, Clock, Flame, Compass } from 'lucide-react';
+import QiblaCompass from './QiblaCompass';
 
 type Screen = 'mode-selection' | 'general-home' | 'islamic-home' | 'mood-check-general' | 'mood-check-islamic' | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic' | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'settings-islamic';
 type Mode = 'general' | 'islamic' | null;
 
 interface QiblaHistoryScreenProps {
   navigate: (screen: Screen, mode?: Mode) => void;
+  currentLanguage: any; // We'll just accept any here or import Language if available
 }
 
 type MoodKey = 'peaceful' | 'grateful' | 'worried' | 'tired' | 'seeking';
@@ -30,8 +32,8 @@ const checkins: { day: string; time: string; mood: MoodKey; note?: string }[] = 
   { day: 'Dec 27', time: '8:30 PM', mood: 'worried', note: 'Made dua for guidance' },
 ];
 
-export default function QiblaHistoryScreen({ navigate }: QiblaHistoryScreenProps) {
-  const [selectedTab, setSelectedTab] = useState<'overview' | 'insights' | 'history'>('overview');
+export default function QiblaHistoryScreen({ navigate, currentLanguage }: QiblaHistoryScreenProps) {
+  const [selectedTab, setSelectedTab] = useState<'overview' | 'insights' | 'history' | 'compass'>('overview');
 
   return (
     <div className="w-full max-w-5xl mx-auto space-y-8">
@@ -61,6 +63,9 @@ export default function QiblaHistoryScreen({ navigate }: QiblaHistoryScreenProps
             <button onClick={() => setSelectedTab('overview')} className={`px-4 py-3 rounded-xl text-sm font-medium transition-all text-left whitespace-nowrap ${selectedTab === 'overview' ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm' : 'text-emerald-100/60 hover:text-emerald-100'}`}>Overview</button>
             <button onClick={() => setSelectedTab('insights')} className={`px-4 py-3 rounded-xl text-sm font-medium transition-all text-left whitespace-nowrap ${selectedTab === 'insights' ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm' : 'text-emerald-100/60 hover:text-emerald-100'}`}>Insights</button>
             <button onClick={() => setSelectedTab('history')} className={`px-4 py-3 rounded-xl text-sm font-medium transition-all text-left whitespace-nowrap ${selectedTab === 'history' ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm' : 'text-emerald-100/60 hover:text-emerald-100'}`}>History</button>
+            <button onClick={() => setSelectedTab('compass')} className={`px-4 py-3 rounded-xl text-sm font-medium transition-all text-left whitespace-nowrap ${selectedTab === 'compass' ? 'bg-gradient-to-r from-emerald-500/20 to-teal-500/20 text-emerald-300 border border-emerald-500/30 shadow-sm' : 'text-emerald-100/60 hover:text-emerald-100 flex items-center gap-2'}`}>
+              <Compass className="w-4 h-4" /> Compass
+            </button>
           </div>
         </div>
 
@@ -68,6 +73,7 @@ export default function QiblaHistoryScreen({ navigate }: QiblaHistoryScreenProps
           {selectedTab === 'overview' && <OverviewTab />}
           {selectedTab === 'insights' && <InsightsTab />}
           {selectedTab === 'history' && <HistoryTab />}
+          {selectedTab === 'compass' && <QiblaCompass />}
         </div>
       </div>
     </div>
@@ -84,12 +90,12 @@ function OverviewTab() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="rounded-3xl bg-white/5 border border-emerald-400/20 p-6 sm:p-8 flex flex-col items-center place-content-center h-80 relative overflow-hidden">
-          <div className="absolute top-6 left-6 right-6 flex items-center justify-between">
+        <div className="rounded-3xl bg-white/5 border border-emerald-400/20 p-6 sm:p-8 flex flex-col h-80 relative overflow-hidden">
+          <div className="flex items-center justify-between mb-4">
             <h3 className="text-white text-lg font-medium">Spiritual Growth</h3>
             <div className="flex items-center gap-1 text-emerald-400 text-sm font-medium bg-emerald-500/20 px-3 py-1 rounded-full"><TrendingUp className="w-4 h-4"/>+18%</div>
           </div>
-          <div className="w-full flex items-end justify-between gap-4 h-48 mt-12 mb-4 px-2">
+          <div className="w-full flex items-end justify-between gap-4 flex-1 px-2 pb-8">
             {[70, 60, 80, 75, 88, 82, 92].map((height, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-3">
                 <div className="w-full sm:w-8 flex-1 flex flex-col justify-end relative group">
@@ -120,13 +126,13 @@ function OverviewTab() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-3xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-400/20 p-6 flex flex-col gap-3">
-          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center text-3xl">🕌</div>
-          <div><h3 className="text-white font-medium text-lg">Prayer Consistency</h3><p className="text-emerald-100/80 text-sm mt-1">Completed 5 prayers for 12 days! 🌟</p></div>
+        <div className="rounded-3xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-blue-400/20 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 text-3xl">🕌</div>
+          <div className="flex-1"><h3 className="text-white font-medium text-lg">Prayer Consistency</h3><p className="text-emerald-100/80 text-sm mt-1">Completed 5 prayers for 12 days! 🌟</p></div>
         </div>
-        <div className="rounded-3xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/20 p-6 flex flex-col gap-3">
-           <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center"><Award className="w-7 h-7 text-yellow-400" /></div>
-           <div><h3 className="text-white font-medium text-lg">New Milestone!</h3><p className="text-emerald-100/80 text-sm mt-1">12-day prayer streak unlocked 🌟</p></div>
+        <div className="rounded-3xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-400/20 p-6 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+           <div className="w-14 h-14 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0"><Award className="w-7 h-7 text-yellow-400" /></div>
+           <div className="flex-1"><h3 className="text-white font-medium text-lg">New Milestone!</h3><p className="text-emerald-100/80 text-sm mt-1">12-day prayer streak unlocked 🌟</p></div>
         </div>
       </div>
     </div>
@@ -180,10 +186,10 @@ function StatCard({ icon, value, label, gradient, iconColor }: { icon: React.Rea
 
 function InsightCard({ icon, title, description, gradient, iconBg, tag }: { icon: React.ReactNode; title: string; description: string; gradient: string; iconBg: string; tag?: string; }) {
   return (
-    <div className={`rounded-2xl bg-gradient-to-br bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-colors flex gap-5`}>
+    <div className={`rounded-2xl bg-gradient-to-br bg-white/5 border border-white/10 p-6 hover:bg-white/10 transition-colors flex flex-col sm:flex-row gap-5`}>
       <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${gradient}`}>{icon}</div>
-      <div>
-        <div className="flex items-center gap-3 mb-2">
+      <div className="flex-1">
+        <div className="flex flex-wrap items-center gap-3 mb-2">
           <h4 className="text-white font-medium text-lg">{title}</h4>
           {tag && <span className="px-2.5 py-1 rounded-full bg-white/10 text-emerald-100/90 text-xs font-medium">{tag}</span>}
         </div>

@@ -32,32 +32,50 @@ export default function AIChatSupportScreenIslamic({ navigate, currentLanguage =
 
   const sendToAI = async (userText: string) => {
     const timestamp = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-    setMessages(prev => [...prev, { id: messages.length + 1, text: userText, sender: 'user', timestamp }]);
+    setMessages((prev: Message[]) => [...prev, { id: messages.length + 1, text: userText, sender: 'user', timestamp }]);
     setMessage('');
     setIsTyping(true);
 
     try {
-      // Use the deployed Render backend so it works without running a local server.
-      // Note: Free Render instances spin down after inactivity, so the first request might take 15-30 seconds.
-      const API_URL = "https://sleepease-backend.onrender.com/chat";
+      // Map local messages to Groq API format
+      const chatHistory = messages.map((msg: Message) => ({
+        role: msg.sender === 'bot' ? 'assistant' : 'user',
+        content: msg.text
+      }));
       
-      const response = await fetch(API_URL, {
+      // Add the new user message
+      chatHistory.push({ role: 'user', content: userText });
+      
+      // Add system prompt
+      const systemPrompt = {
+        role: 'system',
+        content: "You are a gentle, empathetic Islamic wellness companion for an app called SleepEase. You help users relax, find peace, and offer appropriate comforting advice and short authentic Du'as. Keep responses concise and calming."
+      };
+
+      const payload = {
+        model: "llama-3.3-70b-versatile",
+        messages: [systemPrompt, ...chatHistory],
+        temperature: 0.7,
+        max_tokens: 1024
+      };
+
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer test_token"
+          "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
         },
-        body: JSON.stringify({ message: userText, mode: "islamic" }),
+        body: JSON.stringify(payload)
       });
+
+      if (!res.ok) throw new Error(`API Error: ${res.status}`);
+      const data = await res.json();
+      const reply = data.choices[0]?.message?.content || "May Allah ease your mind.";
       
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setMessages(prev => [...prev, { id: Date.now(), text: data.reply, sender: 'bot', timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }]);
+      setMessages((prev: Message[]) => [...prev, { id: Date.now(), text: reply, sender: 'bot', timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }]);
     } catch (error) {
-      setMessages(prev => [...prev, { id: Date.now(), text: "SubhanAllah, I'm having trouble connecting right now. The server might be waking up (this can take up to 50 seconds on the free tier). Please try again. May Allah ease your way.", sender: 'bot', timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }]);
+      console.error("AI Chat error:", error);
+      setMessages((prev: Message[]) => [...prev, { id: Date.now(), text: "SubhanAllah, I'm having trouble connecting right now. Please try again later. May Allah ease your way.", sender: 'bot', timestamp: new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) }]);
     } finally { setIsTyping(false); }
   };
 
@@ -85,7 +103,7 @@ export default function AIChatSupportScreenIslamic({ navigate, currentLanguage =
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pb-4 px-2">
-        {messages.map((msg) => (
+        {messages.map((msg: Message) => (
           <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[75%] px-5 py-3.5 rounded-2xl ${
               msg.sender === 'user'
@@ -129,7 +147,7 @@ export default function AIChatSupportScreenIslamic({ navigate, currentLanguage =
         <div className="flex gap-3 items-center">
           <input
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)}
             placeholder="Type your message..."
             className="flex-1 px-5 py-3.5 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 text-white placeholder:text-white/40 focus:outline-none focus:border-emerald-400/50 focus:bg-white/10 transition-all text-sm shadow-inner"
             onKeyPress={handleKeyPress}

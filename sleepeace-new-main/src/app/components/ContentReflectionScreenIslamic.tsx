@@ -13,7 +13,7 @@ const islamicAudioTracks = [
   { id: 8, title: "Last 10 Surahs", subtitle: "Short Surahs", icon: "🌙", duration: "8 min", url: "https://server8.mp3quran.net/afs/105.mp3", gradient: "from-indigo-500/20 to-violet-500/20" }
 ];
 
-type Screen = 'mode-selection' | 'general-home' | 'islamic-home' | 'mood-check-general' | 'mood-check-islamic' | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic' | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'settings-islamic';
+type Screen = 'mode-selection' | 'general-home' | 'islamic-home' | 'mood-check-general' | 'mood-check-islamic' | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic' | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'settings-islamic' | 'reading-general' | 'reading-islamic';
 type Mode = 'general' | 'islamic' | null;
 
 interface UserInfo { name: string; email: string; }
@@ -182,7 +182,7 @@ export default function ContentReflectionScreenIslamic({ navigate, currentLangua
               <div className="flex items-center gap-4 mb-6 text-emerald-100/70 text-sm">
                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 15 min read</span><span>•</span><span>Morning Du'as</span>
               </div>
-              <button className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:scale-[1.02] active:scale-95 shadow-lg shadow-emerald-500/20 transition-all">Start Reading</button>
+              <button onClick={() => navigate('reading-islamic')} className="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-medium hover:scale-[1.02] active:scale-95 shadow-lg shadow-emerald-500/20 transition-all cursor-pointer">Start Reading</button>
             </div>
           </div>
 
@@ -190,15 +190,15 @@ export default function ContentReflectionScreenIslamic({ navigate, currentLangua
           <div className="space-y-4">
             <h3 className="text-white text-xl font-medium mb-4">{t.contentReflectionIslamic.islamicLibrary}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              <div className="rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-islamic')} className="rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">📚</div>
                 <div><h4 className="text-white font-medium mb-1">Stories of the Prophets</h4><p className="text-emerald-100/60 text-sm mb-2">Ibn Kathir</p><p className="text-white/40 text-xs flex items-center gap-1"><Clock className="w-3 h-3"/> 20 min read</p></div>
               </div>
-              <div className="rounded-2xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-islamic')} className="rounded-2xl bg-gradient-to-br from-emerald-500/20 to-green-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">🕌</div>
                 <div><h4 className="text-white font-medium mb-1">The Sealed Nectar</h4><p className="text-emerald-100/60 text-sm mb-2">Biography of Prophet ﷺ</p><p className="text-white/40 text-xs flex items-center gap-1"><Clock className="w-3 h-3"/> 25 min read</p></div>
               </div>
-              <div className="rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-islamic')} className="rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">📖</div>
                 <div><h4 className="text-white font-medium mb-1">Tafsir Al-Jalalayn</h4><p className="text-emerald-100/60 text-sm mb-2">Quran Commentary</p><p className="text-white/40 text-xs flex items-center gap-1"><Clock className="w-3 h-3"/> 18 min read</p></div>
               </div>

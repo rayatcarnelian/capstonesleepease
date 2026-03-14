@@ -19,6 +19,10 @@ type Screen =
   | 'mode-selection'
   | 'general-home'
   | 'islamic-home'
+  | 'general-login'
+  | 'islamic-login'
+  | 'general-signup'
+  | 'islamic-signup'
   | 'mood-check-general'
   | 'mood-check-islamic'
   | 'content-general'
@@ -27,7 +31,12 @@ type Screen =
   | 'ai-chat-islamic'
   | 'mood-history-general'
   | 'mood-history-islamic'
-  | 'settings';
+  | 'settings'
+  | 'settings-islamic'
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 type Mode = 'general' | 'islamic' | null;
 
@@ -80,7 +89,9 @@ export default function GeneralModeHome({ navigate, userInfo, currentLanguage }:
           className="w-full rounded-3xl bg-gradient-to-br from-slate-200/90 to-slate-300/70 backdrop-blur-xl shadow-xl border border-white/40 p-8 text-left transition-all hover:scale-[1.01] active:scale-[0.99]"
           onClick={() => navigate('mood-check-general')}
         >
-          <div className="w-16 h-16 rounded-2xl bg-white/70 shadow-lg flex items-center justify-center mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-white/70 shadow-lg flex items-center justify-center mb-6 relative">
+            {/* Breathing ring */}
+            <div className="absolute inset-0 rounded-2xl border-2 border-blue-400/40" style={{ animation: 'breathe 4s ease-in-out infinite' }} />
             <svg width="32" height="32" viewBox="0 0 48 48" fill="none">
               <circle cx="24" cy="24" r="20" stroke="#475569" strokeWidth="2.5" opacity="0.9" />
               <circle cx="18" cy="20" r="2.5" fill="#475569" opacity="0.9" />
@@ -258,4 +269,17 @@ function GoalItem({ icon, label, completed, onClick }: { icon: React.ReactNode; 
         }`}>{label}</p>
     </button>
   );
+}
+
+{/* Breathing animation */}
+const breatheStyle = document.createElement('style');
+breatheStyle.textContent = `
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.15); opacity: 0.8; }
+  }
+`;
+if (!document.getElementById('breathe-style')) {
+  breatheStyle.id = 'breathe-style';
+  document.head.appendChild(breatheStyle);
 }

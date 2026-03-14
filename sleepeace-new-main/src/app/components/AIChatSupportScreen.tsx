@@ -34,30 +34,47 @@ const AIChatSupportScreen = ({ navigate, currentLanguage, userName }: AIChatSupp
     setIsTyping(true);
 
     try {
-      // Use the deployed Render backend so it works without running a local server.
-      // Note: Free Render instances spin down after inactivity, so the first request might take 15-30 seconds.
-      const API_URL = "https://sleepease-backend.onrender.com/chat";
+      // Map local messages to Groq API format
+      const chatHistory = messages.map(msg => ({
+        role: msg.sender === 'bot' ? 'assistant' : 'user',
+        content: msg.text
+      }));
       
-      const response = await fetch(API_URL, {
+      // Add the new user message
+      chatHistory.push({ role: 'user', content: currentInput });
+      
+      // Add system prompt
+      const systemPrompt = {
+        role: 'system',
+        content: "You are a gentle, empathetic wellness companion for an app called SleepEase. You help users relax, reduce anxiety, and find peace before sleep. Offer comforting advice and practical mindfulness tips. Keep responses concise and calming."
+      };
+
+      const payload = {
+        model: "llama-3.3-70b-versatile",
+        messages: [systemPrompt, ...chatHistory],
+        temperature: 0.7,
+        max_tokens: 1024
+      };
+
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": "Bearer test_token"
+          "Authorization": `Bearer ${import.meta.env.VITE_GROQ_API_KEY}`
         },
-        body: JSON.stringify({ message: currentInput, mode: "general" }),
+        body: JSON.stringify(payload)
       });
+
+      if (!res.ok) throw new Error(`API Error: ${res.status}`);
+      const data = await res.json();
+      const reply = data.choices[0]?.message?.content || "Take a deep breath. I'm here for you.";
       
-      if (!response.ok) {
-        throw new Error(`Server returned ${response.status}`);
-      }
-      
-      const data = await response.json();
-      setMessages(prev => [...prev, { id: Date.now() + 1, text: data.reply, sender: 'bot' }]);
+      setMessages(prev => [...prev, { id: Date.now() + 1, text: reply, sender: 'bot' }]);
     } catch (error) {
       console.error("Connection error:", error);
       setMessages(prev => [...prev, { 
         id: Date.now() + 1, 
-        text: "I'm having trouble connecting to my brain right now. The server might be waking up (this can take up to 50 seconds on the free tier). Please try again in a moment!", 
+        text: "I'm having trouble connecting right now. Please make sure the backend is running (npm run dev on backend) and try again.", 
         sender: 'bot' 
       }]);
     } finally {

@@ -3,15 +3,15 @@ import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Clock, Headphones, 
 import { translations, Language } from '../translations';
 
 const audioTracks = [
-  { id: 1, title: "Deep Listening", subtitle: "Guided Focus", icon: "✨", duration: "6 min", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", gradient: "from-blue-500/20 to-purple-500/20" },
-  { id: 2, title: "Ocean Waves", subtitle: "Nature Sounds", icon: "🌊", duration: "1 min", url: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Ocean_waves.ogg", gradient: "from-cyan-500/20 to-blue-500/20" },
-  { id: 3, title: "Rain Drops", subtitle: "Ambient Sounds", icon: "🌧️", duration: "2 min", url: "https://upload.wikimedia.org/wikipedia/commons/e/e0/Rain_drops_on_a_window_pane.ogg", gradient: "from-green-500/20 to-emerald-500/20" },
-  { id: 4, title: "Ambient Piano", subtitle: "Relaxing Music", icon: "🎹", duration: "3 min", url: "https://upload.wikimedia.org/wikipedia/commons/b/be/Ambient_piano_music.ogg", gradient: "from-orange-500/20 to-amber-500/20" },
-  { id: 5, title: "Wind in Trees", subtitle: "Nature Sounds", icon: "🍃", duration: "1 min", url: "https://upload.wikimedia.org/wikipedia/commons/c/c5/Wind-in-trees-1.ogg", gradient: "from-purple-500/20 to-pink-500/20" },
-  { id: 6, title: "Gentle Flow", subtitle: "Background Calm", icon: "💫", duration: "6 min", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3", gradient: "from-indigo-500/20 to-blue-500/20" }
+  { id: 1, title: "Deep Listening", subtitle: "Binaural Beats", icon: "✨", duration: "∞", url: "https://actions.google.com/sounds/v1/ambiences/ambience_outer_space.ogg", gradient: "from-blue-500/20 to-purple-500/20" },
+  { id: 2, title: "Ocean Waves", subtitle: "Nature Sounds", icon: "🌊", duration: "∞", url: "https://actions.google.com/sounds/v1/water/waves_crashing_on_rock_beach.ogg", gradient: "from-cyan-500/20 to-blue-500/20" },
+  { id: 3, title: "Rain Drops", subtitle: "Ambient Sounds", icon: "🌧️", duration: "∞", url: "https://actions.google.com/sounds/v1/water/rain_on_roof.ogg", gradient: "from-green-500/20 to-emerald-500/20" },
+  { id: 4, title: "Ambient Piano", subtitle: "Relaxing Music", icon: "🎹", duration: "∞", url: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Gymnopedie_No_1_-_Erik_Satie.ogg", gradient: "from-orange-500/20 to-amber-500/20" },
+  { id: 5, title: "Wind in Trees", subtitle: "Nature Sounds", icon: "🍃", duration: "∞", url: "https://actions.google.com/sounds/v1/weather/wind_through_trees.ogg", gradient: "from-purple-500/20 to-pink-500/20" },
+  { id: 6, title: "Gentle Flow", subtitle: "Background Calm", icon: "💫", duration: "∞", url: "https://upload.wikimedia.org/wikipedia/commons/c/cb/Moonlight_Sonata_-_1st_Movement.ogg", gradient: "from-indigo-500/20 to-blue-500/20" }
 ];
 
-type Screen = 'mode-selection' | 'general-home' | 'islamic-home' | 'mood-check-general' | 'mood-check-islamic' | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic' | 'mood-history-general' | 'mood-history-islamic' | 'settings';
+type Screen = 'mode-selection' | 'general-home' | 'islamic-home' | 'mood-check-general' | 'mood-check-islamic' | 'content-general' | 'content-islamic' | 'ai-chat' | 'ai-chat-islamic' | 'mood-history-general' | 'mood-history-islamic' | 'settings' | 'reading-general' | 'reading-islamic';
 type Mode = 'general' | 'islamic' | null;
 
 interface UserInfo { name: string; email: string; }
@@ -56,19 +56,17 @@ export default function ContentReflectionScreen({ navigate, currentLanguage, use
     setIsPlaying(!isPlaying);
   };
 
-  const nextTrack = () => {
-    setCurrentTrackIndex((currentTrackIndex + 1) % audioTracks.length);
-    setIsPlaying(false); setCurrentTime(0);
+  const switchTrack = (index: number) => {
+    setCurrentTrackIndex(index);
+    setIsPlaying(false);
+    setCurrentTime(0);
   };
 
-  const prevTrack = () => {
-    setCurrentTrackIndex(currentTrackIndex === 0 ? audioTracks.length - 1 : currentTrackIndex - 1);
-    setIsPlaying(false); setCurrentTime(0);
-  };
+  const nextTrack = () => switchTrack((currentTrackIndex + 1) % audioTracks.length);
+  const prevTrack = () => switchTrack(currentTrackIndex === 0 ? audioTracks.length - 1 : currentTrackIndex - 1);
 
   const selectTrack = (index: number) => {
-    setCurrentTrackIndex(index);
-    setIsPlaying(false); setCurrentTime(0);
+    switchTrack(index);
     setTimeout(() => { audioRef.current?.play(); setIsPlaying(true); }, 100);
   };
 
@@ -102,10 +100,10 @@ export default function ContentReflectionScreen({ navigate, currentLanguage, use
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Main Player */}
           <div className={`rounded-3xl bg-gradient-to-br ${currentTrack.gradient} backdrop-blur-xl border border-white/20 overflow-hidden flex flex-col h-full`}>
-            <audio ref={audioRef} src={currentTrack.url} preload="metadata" />
+            <audio ref={audioRef} src={currentTrack.url} preload="metadata" loop />
             <div className="h-64 bg-gradient-to-br from-blue-400/30 to-purple-400/30 relative flex items-center justify-center">
               <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-              <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center text-6xl shadow-2xl">
+              <div className={`w-32 h-32 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center text-6xl shadow-2xl ${isPlaying ? 'animate-pulse' : ''}`}>
                 {currentTrack.icon}
               </div>
               <div className="absolute top-4 right-4 px-4 py-2 rounded-full bg-white/20 backdrop-blur-xl border border-white/30 text-white text-sm font-medium flex items-center gap-2">
@@ -124,7 +122,7 @@ export default function ContentReflectionScreen({ navigate, currentLanguage, use
                     <div className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-400 to-purple-400 rounded-full transition-all" style={{ width: `${progress}%` }} />
                   </div>
                   <div className="flex items-center justify-between text-sm text-white/60">
-                    <span>{formatTime(currentTime)}</span><span>{totalDuration > 0 ? formatTime(totalDuration) : '--:--'}</span>
+                    <span>{formatTime(currentTime)}</span><span>{currentTrack.duration === '∞' ? '∞' : (totalDuration > 0 ? formatTime(totalDuration) : '--:--')}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-center gap-8">
@@ -175,9 +173,9 @@ export default function ContentReflectionScreen({ navigate, currentLanguage, use
               <p className="text-white/60 mb-4">by Emma Sullivan</p>
               <p className="text-white/80 leading-relaxed mb-6 flex-1">A gentle guide to releasing anxiety and finding peace through mindfulness and self-compassion. Learn practical techniques to quiet your mind.</p>
               <div className="flex items-center gap-4 mb-6 text-white/60 text-sm">
-                <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 20 min read</span><span>•</span><span>Chapter 1 of 8</span>
+                <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> 20 min read</span><span>•</span><span>4 Chapters</span>
               </div>
-              <button className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:scale-[1.02] shadow-lg transition-all">Start Reading</button>
+              <button onClick={() => navigate('reading-general')} className="w-full py-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium hover:scale-[1.02] shadow-lg transition-all cursor-pointer">Start Reading</button>
             </div>
           </div>
 
@@ -185,17 +183,17 @@ export default function ContentReflectionScreen({ navigate, currentLanguage, use
           <div className="space-y-4">
             <h3 className="text-white text-xl font-medium mb-4">{t.contentReflection.recommended}</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-              <div className="rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-general')} className="rounded-2xl bg-gradient-to-br from-blue-500/20 to-indigo-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">🌙</div>
-                <div><h4 className="text-white font-medium mb-1">Sleep Better Tonight</h4><p className="text-white/60 text-sm mb-2">Dr. James Chen</p><p className="text-white/40 text-xs">15 min read</p></div>
+                <div><h4 className="text-white font-medium mb-1">Sleep Better Tonight</h4><p className="text-white/60 text-sm mb-2">Dr. James Chen</p><p className="text-white/40 text-xs">10 min read • Chapter 2</p></div>
               </div>
-              <div className="rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-general')} className="rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">🧘‍♀️</div>
-                <div><h4 className="text-white font-medium mb-1">Peaceful Mind Daily</h4><p className="text-white/60 text-sm mb-2">Sarah Williams</p><p className="text-white/40 text-xs">12 min read</p></div>
+                <div><h4 className="text-white font-medium mb-1">Peaceful Mind Daily</h4><p className="text-white/60 text-sm mb-2">Sarah Williams</p><p className="text-white/40 text-xs">12 min read • Chapter 3</p></div>
               </div>
-              <div className="rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
+              <div onClick={() => navigate('reading-general')} className="rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-white/10 p-5 flex gap-4 hover:scale-[1.02] transition-all cursor-pointer">
                 <div className="w-16 h-16 rounded-xl bg-white/10 flex flex-shrink-0 items-center justify-center text-3xl">✨</div>
-                <div><h4 className="text-white font-medium mb-1">The Gratitude Journal</h4><p className="text-white/60 text-sm mb-2">Michael Porter</p><p className="text-white/40 text-xs">10 min read</p></div>
+                <div><h4 className="text-white font-medium mb-1">The Gratitude Journal</h4><p className="text-white/60 text-sm mb-2">Michael Porter</p><p className="text-white/40 text-xs">7 min read • Chapter 4</p></div>
               </div>
             </div>
           </div>

@@ -34,7 +34,10 @@ type Screen =
   | 'mood-history-islamic'
   | 'settings'
   | 'settings-islamic'
-  | 'language-selection';
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 type Mode = 'general' | 'islamic' | null;
 

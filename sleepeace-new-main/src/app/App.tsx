@@ -18,6 +18,9 @@ import QiblaHistoryScreen from './components/QiblaHistoryScreen';
 import SettingsModeSwitching from './components/SettingsModeSwitching';
 import SettingsModeSwitchingIslamic from './components/SettingsModeSwitchingIslamic';
 import LanguageSelection from './components/LanguageSelection';
+import ReadingScreen from './components/ReadingScreen';
+import ReadingScreenIslamic from './components/ReadingScreenIslamic';
+import IslamicTutorScreen from './components/IslamicTutorScreen';
 import { Language, translations } from './translations';
 import { auth } from '../lib/firebaseClient';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -41,7 +44,10 @@ type Screen =
   | 'mood-history-islamic'
   | 'settings'
   | 'settings-islamic'
-  | 'language-selection';
+  | 'language-selection'
+  | 'reading-general'
+  | 'reading-islamic'
+  | 'islamic-tutor';
 
 export interface UserInfo {
   name: string;
@@ -58,7 +64,7 @@ const STANDALONE_SCREENS: Screen[] = [
 ];
 
 // Screens that need full height (chat screens)
-const FULL_HEIGHT_SCREENS: Screen[] = ['ai-chat', 'ai-chat-islamic'];
+const FULL_HEIGHT_SCREENS: Screen[] = ['ai-chat', 'ai-chat-islamic', 'islamic-tutor'];
 
 export default function App() {
   const [selectedMode, setSelectedMode] = useState<Mode>('general');
@@ -136,6 +142,12 @@ export default function App() {
         return <SettingsModeSwitchingIslamic navigate={navigate} currentMode={selectedMode as 'general' | 'islamic'} userInfo={userInfo} onLogout={handleLogout} currentLanguage={currentLanguage} />;
       case 'language-selection':
         return <LanguageSelection navigate={navigate} currentMode={selectedMode as 'general' | 'islamic'} currentLanguage={currentLanguage} onLanguageChange={setCurrentLanguage} />;
+      case 'reading-general':
+        return <ReadingScreen navigate={navigate} currentLanguage={currentLanguage} />;
+      case 'reading-islamic':
+        return <ReadingScreenIslamic navigate={navigate} currentLanguage={currentLanguage} />;
+      case 'islamic-tutor':
+        return <IslamicTutorScreen navigate={navigate} currentLanguage={currentLanguage} userName={userInfo.name} />;
       default:
         return null;
     }
@@ -307,7 +319,7 @@ function ModeSelectionPage({
             backgroundColor: '#3A5F7D',
             boxShadow: '0 4px 20px rgba(58, 95, 125, 0.3)',
           }}
-          onClick={() => navigate(selectedMode === 'general' ? 'general-home' : 'islamic-home')}
+          onClick={() => navigate(selectedMode === 'general' ? 'general-login' : 'islamic-login')}
         >
           {t.continue}
         </button>
