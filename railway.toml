@@ -1,9 +1,0 @@
-[build]
-builder = "docker"
-dockerfilePath = "Dockerfile"
-
-[deploy]
-startCommand = "python main.py"
-healthcheckPath = "/"
-restartPolicyType = "on_failure"
-maxRestartCount = 3
