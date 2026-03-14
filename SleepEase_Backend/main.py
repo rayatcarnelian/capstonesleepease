@@ -6,6 +6,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import datetime
 from typing import List, Optional
+import os
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # --- Local Imports ---
 from database import db
